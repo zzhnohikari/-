@@ -1,0 +1,23 @@
+import requests,time
+from bs4 import BeautifulSoup
+def get_edu_name_data():
+    for i in range(1,206):
+        url = 'https://src.sjtu.edu.cn/rank/firm/0/?page=%s'%str(i)
+        #print(url)
+        s = requests.get(url).text
+        print('获取第{}个数据'.format(i))
+        soup = BeautifulSoup(s, 'lxml')
+        edu1 = soup.find_all('td', attrs={'class': 'am-text-center'})
+        #edu_name = ""
+        for edu in edu1:
+            try:
+                edu_name = edu.a.string
+                print(edu_name)
+                with open('eduname.txt','a+',encoding='utf-8') as f:
+                    f.write(edu_name+'\n')
+                    f.close()
+            except Exception as e:
+                time.sleep(0.1)
+                pass
+if __name__ == '__main__':
+    get_edu_name_data()
